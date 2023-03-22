@@ -63,12 +63,11 @@ app.listen(
     `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
   )
 );
-
-if(process.env.NIDE_ENV === "production"){
+if(process.env.NODE_ENV === "production"){
   const __directory = path.resolve();
-  app.use(express.static(path.join(__directory, "/frontend/public")))
+  app.use(express.static(path.join(__directory, "../", "/frontend/public")))
   app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__directory, "frontend", "public", "index.html"));
+    res.sendFile(path.resolve(__directory, "../", "frontend", "public", "index.html"));
   });
 }
 else{

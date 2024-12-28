@@ -22,7 +22,7 @@
 
 ## Environment Variables
 
-Create a .env file in then root and add the following
+Create an .env file in the root and add the following
 
 ```
 NODE_ENV = development
@@ -39,12 +39,19 @@ npm install
 cd frontend
 npm install
 ```
+- Then for backend = go back to root and inside backend
+
+```
+cd ..
+cd backend
+npm install
+```
 
 ### Run
 
 ```
 # Run frontend (:3000) & backend (:5000)
-npm run dev
+npm start
 
 # Run backend only
 npm run server

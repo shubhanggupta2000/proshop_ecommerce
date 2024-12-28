@@ -22,7 +22,7 @@ import {
   PRODUCT_TOP_REQUEST,
   PRODUCT_TOP_SUCCESS,
 } from "../constants/productConstants";
-import { logout } from "./userActions";
+// import { logout } from "./userActions";
 
 export const listProducts =
   (keyword = "", pageNumber = "") =>

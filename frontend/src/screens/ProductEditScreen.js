@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -20,7 +20,6 @@ const ProductEditScreen = () => {
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
   const [uploading, setUploading] = useState(false);
-  const location = useLocation();
   const Navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -55,29 +54,29 @@ const ProductEditScreen = () => {
   }, [Navigate, dispatch, productId, product, successUpdate]);
 
   const uploadFileHandler = async (e) => {
-    const file = e.target.files[0]
-    const formData = new FormData()
-    formData.append('image', file)
-    setUploading(true)
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
 
     try {
       const config = {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
-      }
+      };
 
-      const { data } = await axios.post('/api/upload', formData, config)
+      const { data } = await axios.post("/api/upload", formData, config);
 
-      if(data){
-        setImage(data)
+      if (data) {
+        setImage(data);
       }
-      setUploading(false)
+      setUploading(false);
     } catch (error) {
-      console.error(error)
-      setUploading(false)
+      console.error(error);
+      setUploading(false);
     }
-  }
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();

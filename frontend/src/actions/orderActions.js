@@ -1,5 +1,5 @@
 import axios from "axios";
-import { CART_CLEAR_ITEMS } from '../constants/cartConstants'
+// import { CART_CLEAR_ITEMS } from '../constants/cartConstants'
 import {
   ORDER_CREATE_REQUEST,
   ORDER_CREATE_SUCCESS,
@@ -20,7 +20,7 @@ import {
   ORDER_DELIVER_SUCCESS,
   ORDER_DELIVER_REQUEST,
 } from "../constants/orderConstants";
-import { logout } from './userActions'
+// import { logout } from './userActions'
 
 export const createOrder = (order) => async (dispatch, getState) => {
   try {
@@ -158,9 +158,9 @@ export const deliverOrder = (order) => async (dispatch, getState) => {
     dispatch({
       type: ORDER_DELIVER_FAIL,
       payload:
-      error.response && error.response.data.message
-      ? error.response.data.message
-      : error.message,
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
     });
   }
 };

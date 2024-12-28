@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Form, Button, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import FormContainer from "../components/FormContainer";
@@ -10,12 +10,13 @@ const PaymentScreen = ({ history }) => {
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
 
+  const Navigate = useNavigate();
+
   if (!shippingAddress) {
     Navigate("/shipping");
   }
 
   const [paymentMethod, setPaymentMethod] = useState("PayPal");
-  const Navigate = useNavigate();
 
   const dispatch = useDispatch();
 

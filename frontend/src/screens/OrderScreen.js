@@ -75,7 +75,15 @@ const OrderScreen = () => {
         setSdkReady(true);
       }
     }
-  }, [dispatch, orderId, successPay, successDeliver, order]);
+  }, [
+    dispatch,
+    orderId,
+    successPay,
+    successDeliver,
+    order,
+    Navigate,
+    userInfo,
+  ]);
 
   const successPaymentHandler = (paymentResult) => {
     console.log(paymentResult);

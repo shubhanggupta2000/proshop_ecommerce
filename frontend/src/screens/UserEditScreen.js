@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Form, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -14,7 +14,6 @@ const UserEditScreen = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
-  const location = useLocation();
   const Navigate = useNavigate();
 
   const dispatch = useDispatch();
@@ -46,7 +45,7 @@ const UserEditScreen = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-    dispatch(updateUser({ _id: userId, name, email, isAdmin }))
+    dispatch(updateUser({ _id: userId, name, email, isAdmin }));
   };
 
   return (
@@ -57,7 +56,7 @@ const UserEditScreen = () => {
       <FormContainer>
         <h1>Edit User</h1>
         {loadingUpdate && <Loader />}
-        {errorUpdate && <Message variant='danger'>{errorUpdate}</Message>}
+        {errorUpdate && <Message variant="danger">{errorUpdate}</Message>}
         {loading ? (
           <Loader />
         ) : error ? (

@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -37,7 +37,7 @@ const PlaceOrderScreen = () => {
       Navigate(`/order/${order._id}`);
     }
     // eslint-disable-nxt-line
-  }, [success]);
+  }, [Navigate, order, success]);
 
   const placeOrderHandler = () => {
     dispatch(

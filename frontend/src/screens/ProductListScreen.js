@@ -15,7 +15,7 @@ import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 import { useParams } from "react-router-dom";
 
 const ProductListScreen = () => {
-  const { pageNumber = 1 } = useParams() 
+  const { pageNumber = 1 } = useParams();
   const dispatch = useDispatch();
   const Navigate = useNavigate();
 
@@ -50,7 +50,7 @@ const ProductListScreen = () => {
     if (successCreate) {
       Navigate(`/admin/product/${createdProduct._id}/edit`);
     } else {
-      dispatch(listProducts('', pageNumber));
+      dispatch(listProducts("", pageNumber));
     }
   }, [
     Navigate,

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { Table, Form, Button, Row, Col } from "react-bootstrap";
-import { LinkContainer }  from 'react-router-bootstrap';
+import { LinkContainer } from "react-router-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -16,7 +15,6 @@ const ProfileScreen = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
 
-  const Navigate = useNavigate();
   const dispatch = useDispatch();
 
   const userDetails = useSelector((state) => state.userDetails);
@@ -36,7 +34,7 @@ const ProfileScreen = () => {
       // Navigate("/login");
     } else {
       if (!user || !user.name || success) {
-        dispatch({ type: USER_UPDATE_PROFILE_RESET })
+        dispatch({ type: USER_UPDATE_PROFILE_RESET });
         dispatch(getUserDetails("profile"));
         dispatch(listMyOrders());
       } else {
@@ -134,19 +132,21 @@ const ProfileScreen = () => {
                     {order.isPaid ? (
                       order.paidAt.substring(0, 10)
                     ) : (
-                      <i className="fas fa-times" style={{ color: 'red' }}></i>
+                      <i className="fas fa-times" style={{ color: "red" }}></i>
                     )}
                   </td>
                   <td>
                     {order.isDelivered ? (
                       order.deliveredAt.substring(0, 10)
                     ) : (
-                      <i className="fas fa-times" style={{ color: 'red' }}></i>
+                      <i className="fas fa-times" style={{ color: "red" }}></i>
                     )}
                   </td>
                   <td>
                     <LinkContainer to={`/order/${order.id}`}>
-                      <Button className="btn-sm" variant='light'>Details</Button>
+                      <Button className="btn-sm" variant="light">
+                        Details
+                      </Button>
                     </LinkContainer>
                   </td>
                 </tr>

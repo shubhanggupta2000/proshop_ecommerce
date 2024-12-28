@@ -17,12 +17,17 @@ const getProducts = asyncHandler(async (req, res) => {
       }
     : {};
 
-  const count = await Product.countDocuments({ ...keyword });
-  const products = await Product.find({ ...keyword })
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
+  try {
+    const count = await Product.countDocuments({ ...keyword });
+    const products = await Product.find({ ...keyword })
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
 
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
+    res.json({ products, page, pages: Math.ceil(count / pageSize) });
+  } catch (error) {
+    console.error(`Error fetching products: ${error.message}`);
+    res.status(500).json({ message: "Server Error" });
+  }
 });
 
 // @desc   Fetch single product

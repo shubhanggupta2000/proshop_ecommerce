@@ -1,20 +1,21 @@
 import mongoose from "mongoose";
 
-mongoose.set('strictQuery', false);
+mongoose.set("strictQuery", false);
 
 const connectDB = async () => {
-    try {
-        const conn = await mongoose.connect(process.env.MONGO_URI, {
-            useUnifiedTopology: true,
-            useNewUrlParser: true,
-            // useCreateIndex: true
-        })
+  try {
+    const conn = await mongoose.connect(process.env.MONGO_URI, {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+      serverSelectionTimeoutMS: 30000,
+      // useCreateIndex: true
+    });
 
-        console.log(`MongoDB Connected: ${conn.connection.host}`.cyan.underline)
-    } catch (error) {
-        console.error(`Error: ${error.message}`.red.underline.bold)
-        process.exit(1)
-    }
-}
+    console.log(`MongoDB Connected: ${conn.connection.host}`.cyan.underline);
+  } catch (error) {
+    console.error(`Error: ${error.message}`.red.underline.bold);
+    process.exit(1);
+  }
+};
 
-export default connectDB
+export default connectDB;

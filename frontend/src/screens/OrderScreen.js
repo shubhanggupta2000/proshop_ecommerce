@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import { PayPalButton } from "react-paypal-button-v2";
+import React, { useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Row, Col, ListGroup, Image, Card, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import axios from "axios";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import {
@@ -21,8 +21,6 @@ const OrderScreen = () => {
   const orderId = id;
   const Navigate = useNavigate();
 
-  const [sdkReady, setSdkReady] = useState(false);
-
   const dispatch = useDispatch();
 
   const orderDetails = useSelector((state) => state.orderDetails);
@@ -37,8 +35,9 @@ const OrderScreen = () => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const [paypalClientId, setPaypalClientId] = React.useState(null);
+
   if (!loading) {
-    // Calculate prices
     const addDecimals = (num) => {
       return (Math.round(num * 100) / 100).toFixed(2);
     };
@@ -52,28 +51,20 @@ const OrderScreen = () => {
     if (!userInfo) {
       Navigate("/login");
     }
-    const addPayPalScript = async () => {
-      const { data: clientId } = await axios.get(`https://proshop-ecommerce-01vy.onrender.com/api/config/paypal`);
-      const script = document.createElement("script");
-      script.type = "text/javascript";
-      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
-      script.async = true;
-      script.onload = () => {
-        setSdkReady(true);
-      };
-      document.body.appendChild(script);
+
+    const getPayPalClientId = async () => {
+      const { data: clientId } = await axios.get(
+        `https://proshop-ecommerce-01vy.onrender.com/api/config/paypal`
+      );
+      setPaypalClientId(clientId);
     };
 
     if (!order || successPay || successDeliver) {
       dispatch({ type: ORDER_PAY_RESET });
       dispatch({ type: ORDER_DELIVER_RESET });
       dispatch(getOrderDetails(orderId));
-    } else if (!order.isPaid) {
-      if (!window.paypal) {
-        addPayPalScript();
-      } else {
-        setSdkReady(true);
-      }
+    } else if (!order.isPaid && !paypalClientId) {
+      getPayPalClientId();
     }
   }, [
     dispatch,
@@ -83,11 +74,25 @@ const OrderScreen = () => {
     order,
     Navigate,
     userInfo,
+    paypalClientId,
   ]);
 
-  const successPaymentHandler = (paymentResult) => {
-    console.log(paymentResult);
-    dispatch(payOrder(orderId, paymentResult));
+  const createOrder = (data, actions) => {
+    return actions.order.create({
+      purchase_units: [
+        {
+          amount: {
+            value: order.totalPrice,
+          },
+        },
+      ],
+    });
+  };
+
+  const onApprove = (data, actions) => {
+    return actions.order.capture().then((paymentResult) => {
+      dispatch(payOrder(orderId, paymentResult));
+    });
   };
 
   const deliverHandler = () => {
@@ -110,7 +115,7 @@ const OrderScreen = () => {
                 <strong>Name: </strong> {order.user.name}
               </p>
               <p>
-                <strong>Email: </strong>{" "}
+                <strong>Email: </strong>
                 <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
               </p>
               <p>
@@ -204,34 +209,34 @@ const OrderScreen = () => {
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
-              {!order.isPaid && (
+              {!order.isPaid && paypalClientId && (
                 <ListGroup.Item>
                   {loadingPay && <Loader />}
-                  {!sdkReady ? (
-                    <Loader />
-                  ) : (
-                    <PayPalButton
-                      amount={order.totalPrice}
-                      onSuccess={successPaymentHandler}
+                  <PayPalScriptProvider
+                    options={{ "client-id": paypalClientId }}
+                  >
+                    <PayPalButtons
+                      createOrder={createOrder}
+                      onApprove={onApprove}
                     />
-                  )}
+                  </PayPalScriptProvider>
                   {loadingDeliver && <Loader />}
-                  {userInfo &&
-                    userInfo.isAdmin &&
-                    order.isPaid &&
-                    !order.isDelivered && (
-                      <ListGroup.Item>
-                        <Button
-                          type="button"
-                          className="btn btn-block"
-                          onClick={deliverHandler}
-                        >
-                          Mark As Delivered
-                        </Button>
-                      </ListGroup.Item>
-                    )}
                 </ListGroup.Item>
               )}
+              {userInfo &&
+                userInfo.isAdmin &&
+                order.isPaid &&
+                !order.isDelivered && (
+                  <ListGroup.Item>
+                    <Button
+                      type="button"
+                      className="btn btn-block"
+                      onClick={deliverHandler}
+                    >
+                      Mark As Delivered
+                    </Button>
+                  </ListGroup.Item>
+                )}
             </ListGroup>
           </Card>
         </Col>

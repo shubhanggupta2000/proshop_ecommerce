@@ -6,7 +6,7 @@ import FormContainer from "../components/FormContainer";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { savePaymentMethod } from "../actions/cartActions";
 
-const PaymentScreen = ({ history }) => {
+const PaymentScreen = () => {
   const cart = useSelector((state) => state.cart);
   const { shippingAddress } = cart;
 
@@ -33,7 +33,6 @@ const PaymentScreen = ({ history }) => {
       <Form onSubmit={submitHandler}>
         <Form.Group>
           <Form.Label as="legend">Select Method</Form.Label>
-
           <Col>
             <Form.Check
               type="radio"
@@ -44,14 +43,6 @@ const PaymentScreen = ({ history }) => {
               checked
               onChange={(e) => setPaymentMethod(e.target.value)}
             ></Form.Check>
-            {/* <Form.Check
-              type="radio"
-              label="Stripe"
-              id="Stripe"
-              name="paymentMethod"
-              value="Stripe"
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            ></Form.Check> */}
           </Col>
         </Form.Group>
         <Button type="submit" variant="primary">

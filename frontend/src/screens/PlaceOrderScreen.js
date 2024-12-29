@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
@@ -12,6 +11,9 @@ const PlaceOrderScreen = () => {
   const Navigate = useNavigate();
 
   const cart = useSelector((state) => state.cart);
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   // Calculate prices
   const addDecimals = (num) => {
@@ -33,11 +35,12 @@ const PlaceOrderScreen = () => {
   const { order, success, error } = orderCreate;
 
   useEffect(() => {
-    if (success) {
+    if (!userInfo) {
+      Navigate("/login");
+    } else if (success) {
       Navigate(`/order/${order._id}`);
     }
-    // eslint-disable-nxt-line
-  }, [Navigate, order, success]);
+  }, [Navigate, userInfo, order, success]);
 
   const placeOrderHandler = () => {
     dispatch(
@@ -144,8 +147,8 @@ const PlaceOrderScreen = () => {
               <ListGroup.Item>
                 <Button
                   type="button"
-                  className="btn-blocked"
-                  disabled={cart.cartItems === 0}
+                  className="btn-block"
+                  disabled={cart.cartItems.length === 0}
                   onClick={placeOrderHandler}
                 >
                   Place Order

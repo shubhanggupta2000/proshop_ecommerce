@@ -26,6 +26,9 @@ const CartScreen = ({ history }) => {
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
 
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   useEffect(() => {
     if (productId) {
       dispatch(addToCart(productId, qty));
@@ -37,7 +40,11 @@ const CartScreen = ({ history }) => {
   };
 
   const checkoutHandler = () => {
-    Navigate("/login?redirect=shipping");
+    if (!userInfo) {
+      Navigate("/login");
+    } else {
+      Navigate("/shipping");
+    }
   };
 
   return (
@@ -100,7 +107,7 @@ const CartScreen = ({ history }) => {
                 Subtotal ({cartItems.reduce((acc, item) => acc + item.qty, 0)})
                 items
               </h2>
-              ${" "}
+              $
               {cartItems
                 .reduce((acc, item) => acc + item.qty * item.price, 0)
                 .toFixed(2)}

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Table, Button } from "react-bootstrap";
+import { Table, Button, Tooltip, OverlayTrigger } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
@@ -34,6 +34,12 @@ const UserListScreen = () => {
       dispatch(deleteUser(id));
     }
   };
+
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Admins cannot delete self or other admins
+    </Tooltip>
+  );
 
   return (
     <>
@@ -74,13 +80,28 @@ const UserListScreen = () => {
                       <i className="fas fa-edit"></i>
                     </Button>
                   </LinkContainer>
-                  <Button
-                    variant="danger"
-                    className="btn-sm"
-                    onClick={() => deleteHandler(user._id)}
-                  >
-                    <i className="fas fa-trash"></i>
-                  </Button>
+                  {user.isAdmin ? (
+                    <OverlayTrigger placement="top" overlay={renderTooltip}>
+                      <span className="d-inline-block">
+                        <Button
+                          variant="danger"
+                          className="btn-sm"
+                          disabled
+                          style={{ pointerEvents: "none" }}
+                        >
+                          <i className="fas fa-trash"></i>
+                        </Button>
+                      </span>
+                    </OverlayTrigger>
+                  ) : (
+                    <Button
+                      variant="danger"
+                      className="btn-sm"
+                      onClick={() => deleteHandler(user._id)}
+                    >
+                      <i className="fas fa-trash"></i>
+                    </Button>
+                  )}
                 </td>
               </tr>
             ))}

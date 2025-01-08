@@ -158,9 +158,17 @@ const updateUser = asyncHandler(async (req, res) => {
   const user = await User.findById(req.params.id);
 
   if (user) {
+    const admins = await User.find({ isAdmin: true });
+
+    if (user.isAdmin && !req.body.isAdmin && admins.length === 1) {
+      res.status(400);
+      throw new Error("Cannot change the only admin to a non-admin");
+    }
+
     user.name = req.body.name || user.name;
     user.email = req.body.email || user.email;
-    user.isAdmin = req.body.isAdmin;
+    user.isAdmin =
+      req.body.isAdmin !== undefined ? req.body.isAdmin : user.isAdmin;
 
     const updatedUser = await user.save();
 

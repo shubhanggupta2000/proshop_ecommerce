@@ -28,6 +28,9 @@ const UserEditScreen = () => {
     success: successUpdate,
   } = userUpdate;
 
+  const userList = useSelector((state) => state.userList);
+  const { users } = userList;
+
   useEffect(() => {
     if (successUpdate) {
       dispatch({ type: USER_UPDATE_RESET });
@@ -46,6 +49,11 @@ const UserEditScreen = () => {
   const submitHandler = (e) => {
     e.preventDefault();
     dispatch(updateUser({ _id: userId, name, email, isAdmin }));
+  };
+
+  const isOnlyAdmin = () => {
+    const admins = users.filter((user) => user.isAdmin);
+    return admins.length === 1 && admins[0]._id === userId;
   };
 
   return (
@@ -83,13 +91,18 @@ const UserEditScreen = () => {
             </Form.Group>
 
             <Form.Group controlId="isadmin">
-              <Form.Label>Password</Form.Label>
               <Form.Check
                 type="checkbox"
                 label="Is Admin"
                 checked={isAdmin}
                 onChange={(e) => setIsAdmin(e.target.checked)}
+                disabled={isOnlyAdmin()}
               ></Form.Check>
+              {isOnlyAdmin() && (
+                <Message variant="info">
+                  You are the only admin and cannot change your admin status.
+                </Message>
+              )}
             </Form.Group>
 
             <Button type="submit" variant="primary">

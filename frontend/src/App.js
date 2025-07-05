@@ -24,6 +24,7 @@ import ProductListScreen from "./screens/ProductListScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
 import OrderListScreen from "./screens/OrderListScreen";
 import { useSelector } from "react-redux";
+import { Toaster } from "react-hot-toast";
 
 const App = () => {
   const userLogin = useSelector((state) => state.userLogin);
@@ -32,6 +33,7 @@ const App = () => {
   return (
     <Router>
       <Header />
+      <Toaster position="top-center" reverseOrder={false} />
       <main className="py-3">
         <Container>
           <Routes>

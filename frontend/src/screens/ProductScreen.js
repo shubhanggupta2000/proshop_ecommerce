@@ -19,6 +19,7 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import Meta from "../components/Meta";
 import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstants";
+import toast from "react-hot-toast";
 
 const ProductScreen = () => {
   const [qty, setQty] = useState(1);
@@ -40,7 +41,7 @@ const ProductScreen = () => {
 
   useEffect(() => {
     if (successProductReview) {
-      alert("Review Submitted!");
+      toast.success("Review Submitted!");
       setRating(0);
       setComment("");
       dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
